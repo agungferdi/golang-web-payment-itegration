@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agung Store</title>
+    <link rel="stylesheet" href="/static/style-index.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="logo">Agung Store</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Cari produk...">
+            </div>
+            <div class="user-actions">
+                <a href="#">Masuk</a>
+                <a href="#">Daftar</a>
+                <a href="#">Keranjang</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <ul class="nav-menu">
+            <li><a href="#">Beranda</a></li>
+            <li><a href="#">Kategori</a></li>
+            <li><a href="#">Promo</a></li>
+            <li><a href="#">Kontak</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Produk Terbaru</h1>
+
+        <!-- Product Grid -->
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="/static/images/1.jpeg" alt="Produk 1" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Bakugan Rise Dragaon</h2>
+                    <p class="product-price">Rp 450.000</p>
+                    <p class="product-location">Probolinggo, Indonesia</p>
+                    <a href="buy_page.html?name=Bakugan%20Rise Dragaon&price=150000">
+                        <button class="buy-now-button">Beli Sekarang</button>
+                    </a>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="/static/images/2.jpeg" alt="Produk 2" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Bakugan Sanzu Hollowboss</h2>
+                    <p class="product-price">Rp 1.300.0000 </p>
+                    <p class="product-location">Probolinggo, Indonesia</p>
+                    <a href="buy_page.html?name=Bakugan%20SanzuHollowboss&price=1300000">
+                        <button class="buy-now-button">Beli Sekarang</button>
+                    </a>
+                    
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="/static/images/3.jpeg" alt="Produk 3" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Bakugan Ogre Leoness</h2>
+                    <p class="product-price">Rp 800.000</p>
+                    <p class="product-location">Surabaya, Indonesia</p>
+                    <a href="buy_page.html?name=Bakugan%20Ogre&Leoness&price=800000">
+                        <button class="buy-now-button">Beli Sekarang</button>
+                    </a>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="/static/images/4.jpeg" alt="Produk 4" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Bakugan Pegatrix</h2>
+                    <p class="product-price">Rp 200.000</p>
+                    <p class="product-location">Probolinggo, Indonesia</p>
+                    <a href="buy_page.html?name=Bakugan%20Pegatrix&price=200000">
+                        <button class="buy-now-button">Beli Sekarang</button>
+                    </a>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="/static/images/5.jpeg" alt="Produk 5" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Bakugan Butta Gill </h2>
+                    <p class="product-price">Rp 250.000</p>
+                    <p class="product-location">Probolinggo, Indonesia</p>
+                    <a href="buy_page.html?name=Bakugan%20Pegatrix&price=250000">
+                        <button class="buy-now-button">Beli Sekarang</button>
+                    </a>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="/static/images/6.jpeg" alt="Produk 6" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Bakugan Flare Dragaon</h2>
+                    <p class="product-price">Rp 1.100.000</p>
+                    <p class="product-location">Probolinggo, Indonesia</p>
+                    <a href="buy_page.html?name=Bakugan%20Flare&Dragaon&price=1100000">
+                        <button class="buy-now-button">Beli Sekarang</button>
+                    </a>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="/static/images/7.jpeg" alt="Produk 7" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Bakugan Nillious Genesis</h2>
+                    <p class="product-price">Rp 450.000</p>
+                    <p class="product-location">Probolinggo, Indonesia</p>
+                    <a href="buy_page.html?name=Bakugan%20Nillious&Genesis&price=450000">
+                        <button class="buy-now-button">Beli Sekarang</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+document.querySelectorAll('.buy-button').forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        const productName = this.dataset.name;
+        const productPrice = this.dataset.price;
+        const url = `buy_page.html?name=${encodeURIComponent(productName)}&price=${encodeURIComponent(productPrice)}`;
+        window.location.href = url;
+    });
+});
+
+</script>

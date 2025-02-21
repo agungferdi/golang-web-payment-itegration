@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/buy.css">
+    <title>Checkout Form</title>
+</head>
+<body>
+    <h1>Checkout Form</h1>
+    
+    <form id="checkoutForm">
+        <div class="form-section">
+            <h3>Shipping Information</h3>
+            <input type="text" name="full_name" placeholder="Full Name" required>
+            <input type="tel" name="phone" placeholder="Phone Number" required>
+            <textarea name="address" placeholder="Full Address" rows="4" required></textarea>
+            <input type="text" name="postal_code" placeholder="Postal Code" required>
+        </div>
+
+        <div class="form-section">
+            <h3>Product Information</h3>
+            <input type="text" id="productName" name="product" readonly required>
+            
+            <div class="price-info">
+                <label>Quantity:</label>
+                <input type="number" name="quantity" id="quantity" min="1" value="1" required>
+                
+                <div class="calculation-row">
+                    <span>Unit Price:</span>
+                    <span id="unitPrice">Rp0</span>
+                </div>
+                <div class="calculation-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotalDisplay">Rp0</span>
+                </div>
+            </div>
+
+            <div>
+                <label>Shipping Method:</label>
+                <select name="shipping_method" id="shippingMethod" required>
+                    <option value="JNE" data-cost="25000">JNE (Rp. 15.000)</option>
+                    <option value="SICepat" data-cost="22000">SICepat (Rp22.000)</option>
+                </select>
+            </div>
+
+            <div>
+                <label>
+                    <input type="checkbox" name="insurance" id="insuranceCheckbox" value="7700">
+                    Dilindungi Asuransi Pengiriman (Rp7.700)
+                </label>
+            </div>
+        </div>
+
+        
+
+        <div class="price-info">
+            <div class="calculation-row">
+                <span>Total Tagihan:</span>
+                <span id="totalDisplay">Rp0</span>
+            </div>
+        </div>
+
+        <input type="hidden" name="unit_price" id="unitPriceInput">
+        <input type="hidden" name="shipping_cost" id="shippingCostInput">
+        <input type="hidden" name="insurance_cost" id="insuranceCostInput">
+        <input type="hidden" name="total_price" id="totalPriceInput">
+
+        <button type="submit" class="pay-button" id="payButton">Complete Purchase</button>
+    </form>
+
+    <!-- Midtrans Snap JS -->
+    <script type="text/javascript" 
+            src="https://app.sandbox.midtrans.com/snap/snap.js" 
+            data-client-key="SB-Mid-client-0wpP2DDhEnC7QYMT"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get("name");
+            const price = urlParams.get("price");
+    
+            if (name && price) {
+                document.getElementById("productName").value = decodeURIComponent(name);
+                document.getElementById("unitPrice").textContent = `Rp${parseInt(price).toLocaleString()}`;
+                document.getElementById("unitPriceInput").value = price;
+                updateTotal(); 
+            }
+    
+            function updateTotal() {
+                const quantity = parseInt(document.getElementById("quantity").value);
+                const unitPrice = parseInt(document.getElementById("unitPriceInput").value);
+                const shippingCost = parseInt(document.getElementById("shippingMethod").selectedOptions[0].dataset.cost);
+                const insuranceCost = document.getElementById("insuranceCheckbox").checked ? 7700 : 0;
+                const subtotal = unitPrice * quantity;
+                const total = subtotal + shippingCost + insuranceCost;
+    
+                document.getElementById("subtotalDisplay").textContent = `Rp${subtotal.toLocaleString()}`;
+                document.getElementById("totalDisplay").textContent = `Rp${total.toLocaleString()}`;
+    
+                document.getElementById("shippingCostInput").value = shippingCost;
+                document.getElementById("insuranceCostInput").value = insuranceCost;
+                document.getElementById("totalPriceInput").value = total;
+            }
+    
+            document.getElementById("quantity").addEventListener("input", updateTotal);
+            document.getElementById("shippingMethod").addEventListener("change", updateTotal);
+            document.getElementById("insuranceCheckbox").addEventListener("change", updateTotal);
+        });
+    </script>
+
+
+<script>
+    document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const payButton = document.getElementById('payButton');
+        payButton.disabled = true;
+        payButton.textContent = 'Memproses...';
+    
+        try {
+            const formData = {
+                product: document.getElementById('productName').value,
+                quantity: parseInt(document.getElementById('quantity').value),
+                unit_price: parseInt(document.getElementById('unitPriceInput').value),
+                shipping_cost: parseInt(document.getElementById('shippingCostInput').value),
+                insurance_cost: parseInt(document.getElementById('insuranceCostInput').value),
+                total_price: parseInt(document.getElementById('totalPriceInput').value),
+                full_name: document.querySelector('[name="full_name"]').value,
+                phone: document.querySelector('[name="phone"]').value,
+                address: document.querySelector('[name="address"]').value,
+                postal_code: document.querySelector('[name="postal_code"]').value,
+            };
+    
+            const response = await fetch('/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+    
+            const result = await response.json();
+            
+            if(result.token) {
+                snap.pay(result.token, {
+                    onSuccess: (result) => {
+                        window.location.href = `/success?order_id=${result.order_id}`;
+                    },
+                    onPending: (result) => {
+                        window.location.href = `/pending?order_id=${result.order_id}`;
+                    },
+                    onError: (error) => {
+                        alert(`Pembayaran gagal: ${error.status_message}`);
+                        payButton.disabled = false;
+                        payButton.textContent = 'Lanjutkan Pembayaran';
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat memproses pembayaran!');
+            payButton.disabled = false;
+            payButton.textContent = 'Lanjutkan Pembayaran';
+        }
+    });
+    </script>
+</body>
+</html>
