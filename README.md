@@ -1,4 +1,5 @@
-Personal Web Store - E-Commerce with Midtrans & MySQL
+Personal Web Store - E-Commerce with Midtrans & MySQL.
+
 Personal Web Store is a Go (Golang)-based eCommerce platform that integrates with Midtrans for secure payment processing. It supports product management, shopping cart functionality, and online payments using various methods like Virtual Accounts, E-Wallets, and Credit/Debit Cards.
 
 🚀 Upcoming Update: User authentication (Register & Login) will be added soon!
@@ -23,7 +24,7 @@ Payment Gateway: Midtrans
 bash
 Copy
 Edit
-git clone https://github.com/yourusername/personal-web-store.git
+git clone https://github.com/agungferdi/golang-web-payment-itegration.git
 cd personal-web-store
 2️⃣ Install Dependencies
 bash
